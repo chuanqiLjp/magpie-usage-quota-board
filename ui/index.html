@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8">
+  <title>用量与额度看板</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <nav class="tabs">
+      <button id="tab-usage" class="tab active" type="button">用量查看</button>
+      <button id="tab-quota" class="tab" type="button">账号额度</button>
+    </nav>
+    <div class="refresh">
+      <label class="sel-wrap">
+        自动刷新
+        <select id="refresh-interval">
+          <option value="0">不刷新</option>
+          <option value="5">5 秒</option>
+          <option value="10">10 秒</option>
+          <option value="30" selected>30 秒</option>
+          <option value="60">60 秒</option>
+        </select>
+      </label>
+      <button id="refresh-btn" class="btn primary" type="button">↻ 刷新</button>
+      <span id="store-hint" class="hint hidden" title="Magpie 的页面跑在沙盒里，浏览器不给它本地存储；此时折叠状态只在本页有效">折叠状态仅本次有效</span>
+    </div>
+  </header>
+
+  <!-- ============ 页一：用量查看 ============ -->
+  <main id="view-usage" class="view">
+    <div class="filters">
+      <span class="filter-label">时间范围</span>
+      <div id="period-pills" class="pills">
+        <button data-period="today" class="pill" type="button">今天</button>
+        <button data-period="7d" class="pill" type="button">7 天</button>
+        <button data-period="30d" class="pill" type="button">30 天</button>
+        <button data-period="custom" class="pill" type="button">自定义</button>
+      </div>
+      <span class="filter-label">汇总维度</span>
+      <div id="dim-pills" class="pills">
+        <button data-dim="model" class="pill active" type="button">按模型</button>
+        <button data-dim="provider" class="pill" type="button">按供应商</button>
+        <button data-dim="account" class="pill" type="button">按账号</button>
+        <button data-dim="harness" class="pill" type="button">按 Harness</button>
+      </div>
+    </div>
+    <div id="custom-range" class="custom-range hidden">
+      <input type="datetime-local" id="range-from" step="60" aria-label="开始时间">
+      <span>至</span>
+      <input type="datetime-local" id="range-to" step="60" aria-label="结束时间">
+      <button id="range-apply" class="btn primary" type="button">查询</button>
+      <span class="hint">精确到时分 · 由插件后端汇总本地流水账</span>
+    </div>
+    <div id="usage-error" class="error hidden"></div>
+    <table class="usage-table">
+      <thead>
+        <tr>
+          <th id="th-name" class="name">模型名称</th>
+          <th>调用次数</th>
+          <th>Token 用量（M）</th>
+          <th id="th-hit" class="hit">缓存命中率</th>
+          <th>错误</th>
+          <th>费用</th>
+        </tr>
+      </thead>
+      <tbody id="usage-body"></tbody>
+      <tfoot id="usage-total"></tfoot>
+    </table>
+    <p class="footnote" id="usage-note"></p>
+  </main>
+
+  <!-- ============ 页二：账号额度 ============ -->
+  <main id="view-quota" class="view hidden">
+    <div class="filters">
+      <button id="expand-all" class="btn" type="button">全部展开</button>
+      <button id="collapse-all" class="btn" type="button">全部折叠</button>
+      <span class="hint">折叠状态记在页面本地</span>
+    </div>
+    <div id="quota-error" class="error hidden"></div>
+    <div class="quota-head">
+      <span>供应商 / 账号</span>
+      <span class="num">总量</span>
+      <span class="num">已使用</span>
+      <span class="num">未使用</span>
+      <span class="pct">使用率</span>
+      <span>进度条</span>
+      <span class="last">最近请求</span>
+    </div>
+    <div id="quota-board" class="quota-board"></div>
+    <p class="footnote">
+      ※ 口径：Trae CN / 商汤小浣熊 / MiniMax Code 取 Credits 窗口；CodeArts 取「总积分」窗口（含基础+赠送，不叠加）；
+      QwenWork 无数字窗口，从余额文字解析（总量 = monthly + long-term，已用 = 总量 − 剩余）。未使用 = 总量 − 已使用。<br>
+      ※ 「正在请求的会话数」网关未暴露实时数据：改显示最近一次请求时间，随自动刷新更新。<br>
+      ※ 进度条 ≤60% 绿、60–90% 橙、&gt;90% 红；供应商行总量/已用/未使用为各账号相加。
+    </p>
+  </main>
+
+  <script src="store.js"></script>
+  <script src="app.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+# 统一换行符：仓库内一律 LF，避免 Windows 开发者的 CRLF 造成整文件 diff
+* text=auto eol=lf
+
+# 明确二进制/非文本类型，避免被当成文本处理
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+
+# SVG 是文本，保留可 diff（但不做 eol 转换以外的处理）
+*.svg text eol=lf

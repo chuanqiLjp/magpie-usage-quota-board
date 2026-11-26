@@ -1,0 +1,70 @@
+{
+  "name": "magpie-usage-quota-board",
+  "version": "0.1.0",
+  "description": "Magpie 本地页面插件：用量查看（今天/7天/30天/自定义精确到时分，按模型/供应商/账号/Harness 汇总）与账号额度两级看板（供应商→账号，总量/已用/未使用/进度条/最近请求）。",
+  "type": "module",
+  "main": "./index.mjs",
+  "files": [
+    "index.mjs",
+    "lib",
+    "page",
+    "ui",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "start": "node lib/server.mjs",
+    "test": "node --test"
+  },
+  "engines": {
+    "magpie": ">=0.1.1340",
+    "node": ">=20"
+  },
+  "keywords": [
+    "magpie",
+    "magpie-plugin",
+    "magpie-page",
+    "usage",
+    "quota",
+    "credits",
+    "tokens",
+    "dashboard",
+    "llm"
+  ],
+  "author": "chuanqiLjp",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chuanqiLjp/magpie-usage-quota-board.git"
+  },
+  "bugs": {
+    "url": "https://github.com/chuanqiLjp/magpie-usage-quota-board/issues"
+  },
+  "homepage": "https://github.com/chuanqiLjp/magpie-usage-quota-board#readme",
+  "magpie": {
+    "name": "用量与额度看板 / Usage & Quota board",
+    "summary": {
+      "en": "A sidebar page: usage by model/provider/account/harness with a custom time range, plus a provider->account quota board with totals, used, remaining, progress bars and last request time.",
+      "zh": "侧边栏页面：用量按模型/供应商/账号/Harness 汇总（支持自定义精确到时分），以及供应商→账号两级额度看板（总量/已用/未使用/进度条/最近请求）。"
+    },
+    "page": {
+      "title": "Usage & quota board",
+      "titles": {
+        "en": "Usage & quota board",
+        "zh": "用量与额度看板",
+        "ja": "使用量とクォータ"
+      },
+      "file": "page/index.html",
+      "service": {
+        "port": 3499,
+        "option": "port"
+      },
+      "icon": "page/icon.svg"
+    },
+    "permissions": [],
+    "options": {
+      "port": 3499
+    },
+    "icon": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjggMTI4IiB3aWR0aD0iMTI4IiBoZWlnaHQ9IjEyOCIgZmlsbD0ibm9uZSI+PHJlY3Qgd2lkdGg9IjEyOCIgaGVpZ2h0PSIxMjgiIHJ4PSIyMCIgZmlsbD0iIzM5NDc4NSIvPjxnIHN0cm9rZT0iI2U4ZWFlZiIgc3Ryb2tlLXdpZHRoPSI4IiBzdHJva2UtbGluZWNhcD0icm91bmQiPjxyZWN0IHg9IjMyIiB5PSIzNCIgd2lkdGg9IjY0IiBoZWlnaHQ9IjEyIiByeD0iNiIvPjxyZWN0IHg9IjMyIiB5PSI1NiIgd2lkdGg9IjM2IiBoZWlnaHQ9IjEyIiByeD0iNiIvPjxyZWN0IHg9IjMyIiB5PSI3OCIgd2lkdGg9IjQ4IiBoZWlnaHQ9IjEyIiByeD0iNiIvPjxwYXRoIGQ9Ik02NCA5NHYxNCIvPjxwYXRoIGQ9Ik0zNiA5NHYxNGgzMiIvPjwvZz48L3N2Zz4="
+  }
+}

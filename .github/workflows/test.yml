@@ -1,0 +1,70 @@
+name: test
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  unit-test:
+    name: 单元测试（node --test）
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # 覆盖主流 LTS；Windows/macOS 行为一致性靠 .gitattributes 的 LF 保证
+        node: [20, 22]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 设置 Node.js ${{ matrix.node }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: 确认零运行时依赖（没有 lockfile 时跳过安装）
+        run: |
+          if [ -f package-lock.json ] || [ -f pnpm-lock.yaml ]; then
+            npm ci
+          else
+            echo "本项目零运行时依赖，跳过安装"
+          fi
+
+      - name: 跑单测
+        run: node --test
+
+      - name: 语法检查
+        run: |
+          for f in index.mjs lib/*.mjs ui/app.js ui/store.js; do
+            node --check "$f"
+          done
+
+  manifest-check:
+    name: 插件清单校验
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: package.json 必填字段与文件存在性
+        run: |
+          node -e '
+          const fs = require("fs");
+          const pkg = JSON.parse(fs.readFileSync("package.json", "utf8"));
+          const must = ["name", "version", "main", "license", "description"];
+          const missing = must.filter((k) => !pkg[k]);
+          if (missing.length) { console.error("缺少字段:", missing.join(", ")); process.exit(1); }
+          if (!pkg.magpie || !pkg.magpie.page || !pkg.magpie.page.file) {
+            console.error("缺少 magpie.page.file（页面插件必须有）"); process.exit(1);
+          }
+          const files = [pkg.main, pkg.magpie.page.file, pkg.magpie.page.icon].filter(Boolean);
+          for (const f of files) {
+            if (!fs.existsSync(f)) { console.error("清单引用的文件不存在:", f); process.exit(1); }
+          }
+          if (pkg.license !== "MIT") { console.error("许可证应为 MIT"); process.exit(1); }
+          console.log("插件清单校验通过:", pkg.name, pkg.version);
+          '

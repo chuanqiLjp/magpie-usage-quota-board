@@ -1,0 +1,57 @@
+# ---- 依赖与构建产物 ----
+node_modules/
+dist/
+*.tsbuildinfo
+
+# ---- 运行期 / 本地调试产物（不应进仓库）----
+# 插件本地服务的临时验证脚本与截图
+*.local.mjs
+*-check*.mjs
+*-proof.mjs
+*-probe*.mjs
+ui-check*.png
+ui-*.png
+sandbox-*.png
+sandbox-*.html
+sandbox-*.mjs
+regression.mjs
+selfcheck.mjs
+selfcheck.py
+preflight.mjs
+
+# ---- 日志与临时文件 ----
+*.log
+logs/
+*.tmp
+*.temp
+.tmp/
+tmp/
+dsh-spill-*/
+
+# ---- 编辑器 / IDE ----
+.vscode/
+.idea/
+*.iml
+*.swp
+*.swo
+*~
+
+# ---- 操作系统 ----
+.DS_Store
+Thumbs.db
+desktop.ini
+$RECYCLE.BIN/
+
+# ---- 环境与密钥（绝不可提交）----
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.pfx
+secrets.json
+
+# ---- AI / Agent 本地工作文件（如不需要可删除本节）----
+.claude/settings.local.json
+.cursor/
+.aider*
