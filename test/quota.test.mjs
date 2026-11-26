@@ -6,6 +6,7 @@ import {
   pickAccountWindow,
   progressColor,
   buildQuotaBoard,
+  accountAliases,
 } from "../lib/quota.mjs";
 
 test("parseQwenWorkBalance 解析真实样例", () => {
@@ -159,4 +160,23 @@ test("buildQuotaBoard：供应商聚合 = 各账号相加，排序稳定", () =>
   const qwen = board.providers.find((p) => p.provider === "qwenwork");
   assert.equal(qwen.limit, 400);
   assert.equal(qwen.used, 0);
+});
+
+test("accountAliases：provider|user → 别名（无别名/空别名不收录，回退原始名）", () => {
+  const map = accountAliases({
+    data: [
+      { provider: "trae-cn", user: "user-1", alias: "账号A" },
+      { provider: "trae-cn", user: "user-2", alias: "" },
+      { provider: "codearts", user: "user-3" },
+      // 同名别名在不同供应商下是不同账号，不能互相覆盖
+      { provider: "raccoon", user: "user-1", alias: "账号B" },
+    ],
+  });
+  assert.equal(map.get("trae-cn|user-1"), "账号A");
+  assert.equal(map.get("raccoon|user-1"), "账号B");
+  assert.equal(map.has("trae-cn|user-2"), false);
+  assert.equal(map.has("codearts|user-3"), false);
+  // 非法输入不抛异常
+  assert.equal(accountAliases(null).size, 0);
+  assert.equal(accountAliases({ data: "not-an-array" }).size, 0);
 });

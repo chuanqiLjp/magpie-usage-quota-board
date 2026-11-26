@@ -111,6 +111,27 @@ test("summarizeRows：流水账四维（account 维 API Key 单独成组）", ()
   assert.equal(harness[0].lastAt, "2026-11-25T11:00:00+08:00");
 });
 
+test("summarizeRows account 维度：优先用别名，未设别名回退原始账号名", () => {
+  const rows = [
+    { t: "2026-11-25T10:00:00+08:00", agent: "a", provider: "trae-cn", providerName: "Trae CN", providerAccount: "user-1", model: "m", in: 1, out: 1, status: 200 },
+    { t: "2026-11-25T10:01:00+08:00", agent: "a", provider: "trae-cn", providerName: "Trae CN", providerAccount: "user-2", model: "m", in: 1, out: 1, status: 200 },
+  ];
+  const aliases = new Map([["trae-cn|user-1", "账号A"]]);
+  assert.deepEqual(
+    summarizeRows(rows, "account", aliases).map((r) => r.name).sort(),
+    ["Trae CN · user-2", "Trae CN · 账号A"],
+  );
+  // 不传别名表（或表里没有该账号）时保持原行为
+  assert.deepEqual(
+    summarizeRows(rows, "account").map((r) => r.name).sort(),
+    ["Trae CN · user-1", "Trae CN · user-2"],
+  );
+  assert.deepEqual(
+    summarizeRows(rows, "account", new Map()).map((r) => r.name).sort(),
+    ["Trae CN · user-1", "Trae CN · user-2"],
+  );
+});
+
 test("readUsageRows：区间过滤（from 含、to 不含）", () => {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), "mqb-"));
   const file = path.join(dir, "usage.jsonl");
