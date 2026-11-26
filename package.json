@@ -1,6 +1,6 @@
 {
   "name": "magpie-usage-quota-board",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Magpie 本地页面插件：用量查看（今天/7天/30天/自定义精确到时分，按模型/供应商/账号/Harness 汇总）与账号额度两级看板（供应商→账号，总量/已用/未使用/进度条/最近请求）。",
   "type": "module",
   "main": "./index.mjs",
